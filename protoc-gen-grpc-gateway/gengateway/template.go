@@ -123,6 +123,9 @@ var _ = utilities.NewDoubleArray
 {{else}}
 {{template "client-rpc-request-func" .}}
 {{end}}
+{{if not (or .Method.GetClientStreaming .Method.GetServerStreaming)}}
+{{template "server-direct-invoke-func" .}}
+{{end}}
 `))
 
 	_ = template.Must(handlerTemplate.New("request-func-signature").Parse(strings.Replace(`
@@ -131,6 +134,10 @@ func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx cont
 {{else}}
 func request_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx context.Context, client {{.Method.Service.GetName}}Client, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error)
 {{end}}`, "\n", "", -1)))
+
+	_ = template.Must(handlerTemplate.New("invoke-func-signature").Parse(strings.Replace(`
+func invoke_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}(ctx context.Context, server {{.Method.Service.GetName}}Server, req *http.Request, pathParams map[string]string) (proto.Message, error)
+`, "\n", "", -1)))
 
 	_ = template.Must(handlerTemplate.New("client-streaming-request-func").Parse(`
 {{template "request-func-signature" .}} {
@@ -235,6 +242,44 @@ var (
 {{end}}
 }`))
 
+	_ = template.Must(handlerTemplate.New("server-direct-invoke-func").Parse(`
+{{template "invoke-func-signature" .}} {
+	var protoReq {{.Method.RequestType.GoType .Method.Service.File.GoPkg.Path}}
+{{if .Body}}
+	if err := json.NewDecoder(req.Body).Decode(&{{.Body.RHS "protoReq"}}); err != nil {
+		return nil, grpc.Errorf(codes.InvalidArgument, "%v", err)
+	}
+{{end}}
+{{if .PathParams}}
+	var (
+		val string
+		ok bool
+		err error
+		_ = err
+	)
+	{{range $param := .PathParams}}
+	val, ok = pathParams[{{$param | printf "%q"}}]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", {{$param | printf "%q"}})
+	}
+{{if $param.IsNestedProto3 }}
+	err = runtime.PopulateFieldFromPath(&protoReq, {{$param | printf "%q"}}, val)
+{{else}}
+	{{$param.RHS "protoReq"}}, err = {{$param.ConvertFuncExpr}}(val)
+{{end}}
+	if err != nil {
+		return nil, err
+	}
+	{{end}}
+{{end}}
+{{if .HasQueryParam}}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_{{.Method.Service.GetName}}_{{.Method.GetName}}_{{.Index}}); err != nil {
+		return nil, grpc.Errorf(codes.InvalidArgument, "%v", err)
+	}
+{{end}}
+	return server.{{.Method.GetName}}(ctx, &protoReq)
+}`))
+
 	trailerTemplate = template.Must(template.New("trailer").Parse(`
 {{range $svc := .}}
 // Register{{$svc.GetName}}HandlerFromEndpoint is same as Register{{$svc.GetName}}Handler but
@@ -293,6 +338,36 @@ func Register{{$svc.GetName}}Handler(ctx context.Context, mux *runtime.ServeMux,
 		{{end}}
 	})
 	{{end}}
+	{{end}}
+	return nil
+}
+
+// Register{{$svc.GetName}}HandlerFromServer registers the http handlers for service {{$svc.GetName}} to "mux".
+// The handlers invoke the function of the server directly.
+func Register{{$svc.GetName}}HandlerFromServer(ctx context.Context, mux *runtime.ServeMux, server {{$svc.GetName}}Server) error {
+	{{range $m := $svc.Methods}}
+	{{range $b := $m.Bindings}}{{if not (or $m.GetClientStreaming $m.GetServerStreaming)}}
+	mux.Handle({{$b.HTTPMethod | printf "%q"}}, pattern_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_{{$svc.GetName}}_{{$m.GetName}}_{{$b.Index}}(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	{{end}}{{end}}
 	{{end}}
 	return nil
 }

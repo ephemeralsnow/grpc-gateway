@@ -208,6 +208,177 @@ func request_ABitOfEverythingService_Create_0(ctx context.Context, client ABitOf
 
 }
 
+func invoke_ABitOfEverythingService_Create_0(ctx context.Context, server ABitOfEverythingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq ABitOfEverything
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["float_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "float_value")
+	}
+
+	protoReq.FloatValue, err = runtime.Float32(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["double_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "double_value")
+	}
+
+	protoReq.DoubleValue, err = runtime.Float64(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["int64_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "int64_value")
+	}
+
+	protoReq.Int64Value, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["uint64_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "uint64_value")
+	}
+
+	protoReq.Uint64Value, err = runtime.Uint64(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["int32_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "int32_value")
+	}
+
+	protoReq.Int32Value, err = runtime.Int32(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["fixed64_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "fixed64_value")
+	}
+
+	protoReq.Fixed64Value, err = runtime.Uint64(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["fixed32_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "fixed32_value")
+	}
+
+	protoReq.Fixed32Value, err = runtime.Uint32(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["bool_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "bool_value")
+	}
+
+	protoReq.BoolValue, err = runtime.Bool(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["string_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "string_value")
+	}
+
+	protoReq.StringValue, err = runtime.String(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["uint32_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "uint32_value")
+	}
+
+	protoReq.Uint32Value, err = runtime.Uint32(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["sfixed32_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "sfixed32_value")
+	}
+
+	protoReq.Sfixed32Value, err = runtime.Int32(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["sfixed64_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "sfixed64_value")
+	}
+
+	protoReq.Sfixed64Value, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["sint32_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "sint32_value")
+	}
+
+	protoReq.Sint32Value, err = runtime.Int32(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	val, ok = pathParams["sint64_value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "sint64_value")
+	}
+
+	protoReq.Sint64Value, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_ABitOfEverythingService_Create_0); err != nil {
+		return nil, grpc.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	return server.Create(ctx, &protoReq)
+}
+
 func request_ABitOfEverythingService_CreateBody_0(ctx context.Context, client ABitOfEverythingServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq ABitOfEverything
 	var metadata runtime.ServerMetadata
@@ -219,6 +390,16 @@ func request_ABitOfEverythingService_CreateBody_0(ctx context.Context, client AB
 	msg, err := client.CreateBody(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
+}
+
+func invoke_ABitOfEverythingService_CreateBody_0(ctx context.Context, server ABitOfEverythingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq ABitOfEverything
+
+	if err := json.NewDecoder(req.Body).Decode(&protoReq); err != nil {
+		return nil, grpc.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	return server.CreateBody(ctx, &protoReq)
 }
 
 func request_ABitOfEverythingService_BulkCreate_0(ctx context.Context, client ABitOfEverythingServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -289,6 +470,30 @@ func request_ABitOfEverythingService_Lookup_0(ctx context.Context, client ABitOf
 
 }
 
+func invoke_ABitOfEverythingService_Lookup_0(ctx context.Context, server ABitOfEverythingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq IdMessage
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["uuid"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "uuid")
+	}
+
+	protoReq.Uuid, err = runtime.String(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return server.Lookup(ctx, &protoReq)
+}
+
 func request_ABitOfEverythingService_List_0(ctx context.Context, client ABitOfEverythingServiceClient, req *http.Request, pathParams map[string]string) (ABitOfEverythingService_ListClient, runtime.ServerMetadata, error) {
 	var protoReq EmptyMessage
 	var metadata runtime.ServerMetadata
@@ -337,6 +542,34 @@ func request_ABitOfEverythingService_Update_0(ctx context.Context, client ABitOf
 
 }
 
+func invoke_ABitOfEverythingService_Update_0(ctx context.Context, server ABitOfEverythingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq ABitOfEverything
+
+	if err := json.NewDecoder(req.Body).Decode(&protoReq); err != nil {
+		return nil, grpc.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["uuid"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "uuid")
+	}
+
+	protoReq.Uuid, err = runtime.String(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return server.Update(ctx, &protoReq)
+}
+
 func request_ABitOfEverythingService_Delete_0(ctx context.Context, client ABitOfEverythingServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq IdMessage
 	var metadata runtime.ServerMetadata
@@ -362,6 +595,30 @@ func request_ABitOfEverythingService_Delete_0(ctx context.Context, client ABitOf
 	msg, err := client.Delete(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
+}
+
+func invoke_ABitOfEverythingService_Delete_0(ctx context.Context, server ABitOfEverythingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq IdMessage
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["uuid"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "uuid")
+	}
+
+	protoReq.Uuid, err = runtime.String(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return server.Delete(ctx, &protoReq)
 }
 
 func request_ABitOfEverythingService_Echo_0(ctx context.Context, client ABitOfEverythingServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -391,6 +648,30 @@ func request_ABitOfEverythingService_Echo_0(ctx context.Context, client ABitOfEv
 
 }
 
+func invoke_ABitOfEverythingService_Echo_0(ctx context.Context, server ABitOfEverythingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq sub.StringMessage
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["value"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "value")
+	}
+
+	protoReq.Value, err = runtime.StringP(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return server.Echo(ctx, &protoReq)
+}
+
 func request_ABitOfEverythingService_Echo_1(ctx context.Context, client ABitOfEverythingServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq sub.StringMessage
 	var metadata runtime.ServerMetadata
@@ -402,6 +683,16 @@ func request_ABitOfEverythingService_Echo_1(ctx context.Context, client ABitOfEv
 	msg, err := client.Echo(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
+}
+
+func invoke_ABitOfEverythingService_Echo_1(ctx context.Context, server ABitOfEverythingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq sub.StringMessage
+
+	if err := json.NewDecoder(req.Body).Decode(&protoReq.Value); err != nil {
+		return nil, grpc.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	return server.Echo(ctx, &protoReq)
 }
 
 var (
@@ -419,6 +710,16 @@ func request_ABitOfEverythingService_Echo_2(ctx context.Context, client ABitOfEv
 	msg, err := client.Echo(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
+}
+
+func invoke_ABitOfEverythingService_Echo_2(ctx context.Context, server ABitOfEverythingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq sub.StringMessage
+
+	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_ABitOfEverythingService_Echo_2); err != nil {
+		return nil, grpc.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	return server.Echo(ctx, &protoReq)
 }
 
 func request_ABitOfEverythingService_BulkEcho_0(ctx context.Context, client ABitOfEverythingServiceClient, req *http.Request, pathParams map[string]string) (ABitOfEverythingService_BulkEchoClient, runtime.ServerMetadata, error) {
@@ -741,6 +1042,181 @@ func RegisterABitOfEverythingServiceHandler(ctx context.Context, mux *runtime.Se
 
 		forward_ABitOfEverythingService_BulkEcho_0(ctx, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
 
+	})
+
+	return nil
+}
+
+// RegisterABitOfEverythingServiceHandlerFromServer registers the http handlers for service ABitOfEverythingService to "mux".
+// The handlers invoke the function of the server directly.
+func RegisterABitOfEverythingServiceHandlerFromServer(ctx context.Context, mux *runtime.ServeMux, server ABitOfEverythingServiceServer) error {
+
+	mux.Handle("POST", pattern_ABitOfEverythingService_Create_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_ABitOfEverythingService_Create_0(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_ABitOfEverythingService_Create_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	mux.Handle("POST", pattern_ABitOfEverythingService_CreateBody_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_ABitOfEverythingService_CreateBody_0(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_ABitOfEverythingService_CreateBody_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	mux.Handle("GET", pattern_ABitOfEverythingService_Lookup_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_ABitOfEverythingService_Lookup_0(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_ABitOfEverythingService_Lookup_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	mux.Handle("PUT", pattern_ABitOfEverythingService_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_ABitOfEverythingService_Update_0(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_ABitOfEverythingService_Update_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	mux.Handle("DELETE", pattern_ABitOfEverythingService_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_ABitOfEverythingService_Delete_0(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_ABitOfEverythingService_Delete_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	mux.Handle("GET", pattern_ABitOfEverythingService_Echo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_ABitOfEverythingService_Echo_0(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_ABitOfEverythingService_Echo_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	mux.Handle("POST", pattern_ABitOfEverythingService_Echo_1, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_ABitOfEverythingService_Echo_1(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_ABitOfEverythingService_Echo_1(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	mux.Handle("GET", pattern_ABitOfEverythingService_Echo_2, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_ABitOfEverythingService_Echo_2(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_ABitOfEverythingService_Echo_2(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil

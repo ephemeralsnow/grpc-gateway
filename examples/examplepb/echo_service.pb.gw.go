@@ -56,6 +56,30 @@ func request_EchoService_Echo_0(ctx context.Context, client EchoServiceClient, r
 
 }
 
+func invoke_EchoService_Echo_0(ctx context.Context, server EchoServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq SimpleMessage
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["id"]
+	if !ok {
+		return nil, grpc.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+	}
+
+	protoReq.Id, err = runtime.String(val)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return server.Echo(ctx, &protoReq)
+}
+
 func request_EchoService_EchoBody_0(ctx context.Context, client EchoServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SimpleMessage
 	var metadata runtime.ServerMetadata
@@ -67,6 +91,16 @@ func request_EchoService_EchoBody_0(ctx context.Context, client EchoServiceClien
 	msg, err := client.EchoBody(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
+}
+
+func invoke_EchoService_EchoBody_0(ctx context.Context, server EchoServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq SimpleMessage
+
+	if err := json.NewDecoder(req.Body).Decode(&protoReq); err != nil {
+		return nil, grpc.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	return server.EchoBody(ctx, &protoReq)
 }
 
 // RegisterEchoServiceHandlerFromEndpoint is same as RegisterEchoServiceHandler but
@@ -143,6 +177,55 @@ func RegisterEchoServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn
 
 		forward_EchoService_EchoBody_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
 
+	})
+
+	return nil
+}
+
+// RegisterEchoServiceHandlerFromServer registers the http handlers for service EchoService to "mux".
+// The handlers invoke the function of the server directly.
+func RegisterEchoServiceHandlerFromServer(ctx context.Context, mux *runtime.ServeMux, server EchoServiceServer) error {
+
+	mux.Handle("POST", pattern_EchoService_Echo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_EchoService_Echo_0(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_EchoService_Echo_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	mux.Handle("POST", pattern_EchoService_EchoBody_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
+		resp, err := invoke_EchoService_EchoBody_0(runtime.AnnotateContext(ctx, req), server, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, req, err)
+			return
+		}
+
+		forward_EchoService_EchoBody_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
